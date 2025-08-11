@@ -1,0 +1,3 @@
+[workspace]
+members = ["lowell-cli", "lowell-core"]
+resolver = "2"

@@ -1,0 +1,4 @@
+name = "kvm-ostree"
+root = "ostree"
+modules = ["virtio_blk","virtio_net","xfs","ext4"]
+cmdline = "console=ttyS0,115200n8"

@@ -1,0 +1,17 @@
+[package]
+name = "lowell-cli"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "lowell"
+path = "src/main.rs"
+
+[dependencies]
+lowell-core = { path = "../lowell-core" }
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "registry"]}
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
