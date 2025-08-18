@@ -1,0 +1,116 @@
+name: release
+
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      build_only:
+        description: "Build artifacts only (don't publish a Release)"
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    name: build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x86_64
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          # Linux aarch64 (cross-compile on x86_64 Ubuntu)
+          - os: ubuntu-24.04
+            target: aarch64-unknown-linux-gnu
+          # macOS Apple Silicon
+          - os: macos-14
+            target: aarch64-apple-darwin
+          # macOS Intel
+          - os: macos-13
+            target: x86_64-apple-darwin
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            . -> target
+
+      # Cross toolchain for Linux aarch64 when building on x86_64
+      - name: Install aarch64 GNU cross toolchain
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+      - name: Configure Cargo linker for aarch64-unknown-linux-gnu
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          mkdir -p .cargo
+          printf '[target.aarch64-unknown-linux-gnu]\nlinker = "aarch64-linux-gnu-gcc"\n' >> .cargo/config.toml
+
+      - name: Build lowell-cli (release)
+        run: cargo build -p lowell-cli --release --locked --target ${{ matrix.target }}
+
+      - name: Package tarball
+        shell: bash
+        run: |
+          set -euo pipefail
+          NAME=lowell
+          TARGET='${{ matrix.target }}'
+          # if manually dispatched on a branch, GITHUB_REF_NAME is the branch; on tags it's 'vX.Y.Z'
+          VERSION="${GITHUB_REF_NAME#v}"
+          BIN="target/${TARGET}/release/lowell"
+          OUT="${NAME}-v${VERSION:-dev}-${TARGET}.tar.gz"
+          mkdir -p dist/${TARGET}
+          cp "${BIN}" dist/${TARGET}/
+          [ -f LICENSE ] && cp LICENSE dist/${TARGET}/ || true
+          [ -f README.md ] && cp README.md dist/${TARGET}/ || true
+          tar -C dist/${TARGET} -czf "${OUT}" .
+          shasum -a 256 "${OUT}" > "${OUT}.sha256"
+          echo "ASSET=${OUT}" >> $GITHUB_ENV
+          echo "ASSET_SHA=${OUT}.sha256" >> $GITHUB_ENV
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ASSET }}
+          path: |
+            ${{ env.ASSET }}
+            ${{ env.ASSET_SHA }}
+
+  release:
+    # Only publish a GitHub Release when a tag is pushed AND not in "build only" mode.
+    if: startsWith(github.ref, 'refs/tags/v') && (github.event_name != 'workflow_dispatch' || inputs.build_only == false)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Collect files
+        id: collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          ls -1 dist/*/*.tar.gz > tars.txt
+          ls -1 dist/*/*.sha256 > sums.txt
+          paste -sd, -d, tars.txt > tars.csv
+          paste -sd, -d, sums.txt > sums.csv
+          echo "TARS=$(cat tars.csv)" >> $GITHUB_OUTPUT
+          echo "SUMS=$(cat sums.csv)" >> $GITHUB_OUTPUT
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ${{ steps.collect.outputs.TARS }}
+            ${{ steps.collect.outputs.SUMS }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
