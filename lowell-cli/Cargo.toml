@@ -1,14 +1,21 @@
 [package]
 name = "lowell-cli"
-version = "0.1.0"
-edition = "2021"
+version     = "0.0.1"
+edition     = "2021"
+license     = "Apache-2.0 OR MIT"
+description = "OCI-native tooling for hermetic, host-agnostic boot artifacts (UKI/initramfs)"
+repository  = "https://github.com/SamD2021/lowell"
+readme      = "../README.md"
+keywords    = ["uki", "initramfs", "oci", "boot", "kernel"]
+categories  = ["command-line-utilities", "os"]
+include = ["src/**", "Cargo.toml", "README.md", "LICENSE*"]
 
 [[bin]]
 name = "lowell"
 path = "src/main.rs"
 
 [dependencies]
-lowell-core = { path = "../lowell-core" }
+lowell-core = "0.0.1"
 clap = { version = "4", features = ["derive"] }
 anyhow = "1"
 tracing = "0.1"

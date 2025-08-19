@@ -265,11 +265,11 @@ checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 
 [[package]]
 name = "lowell-cli"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
- "lowell-core",
+ "lowell-core 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_json",
  "tracing",
@@ -278,7 +278,7 @@ dependencies = [
 
 [[package]]
 name = "lowell-core"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "goblin",
@@ -286,6 +286,20 @@ dependencies = [
  "serde",
  "sha2",
  "tempfile",
+ "tracing",
+]
+
+[[package]]
+name = "lowell-core"
+version = "0.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8a84fc13574332db7c1287819bf9b2f0b98c4d1f1e67467a95589116dd839a34"
+dependencies = [
+ "anyhow",
+ "goblin",
+ "rs-release",
+ "serde",
+ "sha2",
  "tracing",
 ]
 
