@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use crate::formats::initramfs::{detect, Compression};
 use crate::formats::osrel::{read_os_release, OsRelease};
 use crate::formats::pe::PeFile;

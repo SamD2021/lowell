@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 //! Extension helpers for working with PE sections in the `uki` layer.
 //!
 //! Purpose: keep `formats::pe::PeFile` **format-agnostic** and small,

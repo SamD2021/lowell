@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 //! PE/COFF helpers for Unified Kernel Images (UKI)
 //!
 //! Read-only introspection of PE/EFI images (UKIs) with small, ergonomic helpers.

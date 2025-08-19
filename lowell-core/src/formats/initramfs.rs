@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use std::fmt;
 #[derive(serde::Serialize, Debug, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
