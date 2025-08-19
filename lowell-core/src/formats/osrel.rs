@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT OR Apache-2.0
 use crate::formats::pe::PeFile;
 use anyhow::Result;
 use rs_release::parse_os_release_str;
