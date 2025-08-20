@@ -2,6 +2,8 @@
 use anyhow::Result;
 use clap::{Args, Parser, Subcommand, ValueEnum};
 
+mod uki;
+
 #[derive(Parser, Debug)]
 #[command(name = "lowell", version, about = "Hermetic initramfs/UKI builder")]
 pub struct Cli {
@@ -17,7 +19,7 @@ impl Cli {
     }
     pub fn run(self) -> Result<()> {
         match self.cmd {
-            Cmd::Inspect(a) => a.run(),
+            Cmd::Uki(a) => a.run(),
         }
     }
 }
@@ -31,7 +33,7 @@ pub struct GlobalArgs {
 
 #[derive(Subcommand, Debug)]
 enum Cmd {
-    Inspect(inspect::InspectArgs),
+    Uki(uki::UkiArgs),
 }
 
 #[derive(Clone, Copy, Debug, ValueEnum)]
@@ -54,8 +56,6 @@ impl LogLevel {
         }
     }
 }
-
-mod inspect;
 
 #[cfg(test)]
 mod tests {

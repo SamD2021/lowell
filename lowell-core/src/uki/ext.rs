@@ -6,7 +6,7 @@
 //! bytes and file-location in one call.
 
 use crate::formats::pe::PeFile;
-use crate::inspect::uki::SectionInfo;
+use crate::uki::inspect::SectionInfo;
 use anyhow::Result; // adjust path if you moved SectionInfo
 
 // ---- Sealed extension trait (prevents external impls) ----

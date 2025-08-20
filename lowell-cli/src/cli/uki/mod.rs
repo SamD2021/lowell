@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-mod uki;
+mod inspect;
 
 use anyhow::Result;
 use clap::{Args, Subcommand};
 
 #[derive(Args, Debug)]
-pub struct InspectArgs {
+pub struct UkiArgs {
     #[command(subcommand)]
-    cmd: InspectCmd,
+    cmd: UkiCmd,
 }
 
 #[derive(Subcommand, Debug)]
-enum InspectCmd {
-    /// Uki contents from a UKI
-    Uki(uki::UkiArgs),
+enum UkiCmd {
+    /// Inspect contents from a UKI
+    Inspect(inspect::InspectArgs),
 }
 
-impl InspectArgs {
+impl UkiArgs {
     pub fn run(self) -> Result<()> {
         match self.cmd {
-            InspectCmd::Uki(a) => a.run(),
+            UkiCmd::Inspect(a) => a.run(),
         }
     }
 }
