@@ -2,7 +2,7 @@
 use crate::formats::initramfs::{detect, Compression};
 use crate::formats::osrel::{read_os_release, OsRelease};
 use crate::formats::pe::PeFile;
-use crate::inspect::ext::SectionLookupExt;
+use crate::uki::ext::SectionLookupExt;
 use anyhow::{Context, Result};
 use sha2::{Digest, Sha256};
 use std::path::PathBuf;
@@ -10,7 +10,7 @@ use std::time::Instant;
 use tracing::{debug, debug_span};
 
 #[derive(Debug)]
-pub struct UkiOptions {
+pub struct InspectOptions {
     /// Path to the UKI to inspect
     pub file: PathBuf,
 }
@@ -43,7 +43,7 @@ pub struct InitrdInfo {
     pub entries_estimate: Option<usize>,
 }
 
-pub fn inspect(UkiOptions { file: uki }: UkiOptions) -> Result<Report> {
+pub fn inspect(InspectOptions { file: uki }: InspectOptions) -> Result<Report> {
     // Parent span
     let _inspect_span = debug_span!("inspect", path = %uki.display()).entered();
 
@@ -211,7 +211,7 @@ VERSION_ID="1.2.3"
     #[ignore = "requires UKI_PATH"]
     fn inspect_real_uki_smoke() {
         let uki_path = std::env::var("UKI_PATH").expect("set UKI_PATH to a real UKI");
-        let report = inspect(UkiOptions {
+        let report = inspect(InspectOptions {
             file: uki_path.into(),
         })
         .expect("inspect report");

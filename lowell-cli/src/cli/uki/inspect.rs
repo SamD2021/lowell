@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 use anyhow::Result;
 use clap::{Args, ValueEnum};
-use lowell_core::inspect::uki::{self, Report, UkiOptions};
+use lowell_core::uki::inspect::{self, InspectOptions, Report};
 use std::io::{self, Write};
 use std::path::PathBuf;
 
@@ -13,9 +13,8 @@ enum Output {
 }
 
 #[derive(Args, Debug)]
-pub struct UkiArgs {
+pub struct InspectArgs {
     /// Path to the UKI to inspect
-    #[arg(long)]
     file: PathBuf,
     /// Output format (human by default)
     #[arg(long, value_enum, default_value_t = Output::Human)]
@@ -25,9 +24,9 @@ pub struct UkiArgs {
     verbose: bool,
 }
 
-impl UkiArgs {
+impl InspectArgs {
     pub fn run(self) -> Result<()> {
-        let report = uki::inspect(UkiOptions { file: self.file })?;
+        let report = inspect::inspect(InspectOptions { file: self.file })?;
         match self.format {
             Output::Human => print_human(&report, self.verbose)?,
             Output::Json => {
