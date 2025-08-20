@@ -1,3 +1,7 @@
 [workspace]
 members = ["lowell-cli", "lowell-core"]
 resolver = "2"
+
+# Local dev override: use the path crate instead of crates.io
+[patch.crates-io]
+lowell-core = { path = "lowell-core" }
