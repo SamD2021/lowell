@@ -269,7 +269,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "clap",
- "lowell-core 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "lowell-core",
  "serde",
  "serde_json",
  "tracing",
@@ -286,20 +286,6 @@ dependencies = [
  "serde",
  "sha2",
  "tempfile",
- "tracing",
-]
-
-[[package]]
-name = "lowell-core"
-version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8a84fc13574332db7c1287819bf9b2f0b98c4d1f1e67467a95589116dd839a34"
-dependencies = [
- "anyhow",
- "goblin",
- "rs-release",
- "serde",
- "sha2",
  "tracing",
 ]
 
