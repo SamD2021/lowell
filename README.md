@@ -17,8 +17,8 @@ Still under early active development:
 
 * **Works today**
 
-  * CLI: `lowell inspect uki --file /path/to/vmlinuz.efi`
-  * Flags: `--format json|human`, `--verbose`, global `--log-level {error|warn|info|debug|trace}`
+  * CLI: `lowell uki inspect /path/to/vmlinuz.efi`
+  * Flags: `--format human|json|json-pretty`, `--verbose`, global `--log-level {error|warn|info|debug|trace}`
   * Reports:
     * `arch`, `pe32_plus`
     * Signature presence and `cert_count`
@@ -29,8 +29,8 @@ Still under early active development:
 
 * **Planned next**
 
-  * `lowell inject uki` — modify initramfs and rebuild a UKI
-  * `lowell build` — hermetic initramfs + UKI, using OCI-pinned inputs where it helps
+  * `lowell uki inject` — modify initramfs and rebuild a UKI
+  * `lowell uki build` — hermetic initramfs + UKI, using OCI-pinned inputs where it helps
 
 ## Documentation
 
@@ -107,7 +107,7 @@ Thanks for considering a contribution! Bug reports, docs, tests, and features ar
 just build            # or: cargo build --release
 
 # run the CLI
-target/release/lowell inspect uki --file /path/to/vmlinuz.efi
+target/release/lowell uki inspect /path/to/vmlinuz.efi
 
 # format, lint, test (pre-PR checklist)
 cargo fmt --all

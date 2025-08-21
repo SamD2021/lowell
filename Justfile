@@ -49,21 +49,20 @@ test:
 build:
   cargo build -q -p {{CLI_PKG}} --release --locked {{CARGO_FLAGS}}
 
+lowell *ARGS:
+  cargo run -p {{CLI_PKG}} --release -- {{ARGS}}
+
 # --- Inspect helpers --------------------------------------------------------
 
 # Run: just inspect ../uki-out/vmlinuz-virt.efi
-inspect uki: build
-  {{BIN}} --log-level {{RUST_LOG}} inspect uki --file {{uki}}
-
-# Run: just inspect-json ../uki-out/vmlinuz-virt.efi
-inspect-json uki: build
-  {{BIN}} --log-level {{RUST_LOG}} inspect uki --file {{uki}} --format json
+uki-inspect uki *ARGS: build
+  {{BIN}} --log-level {{RUST_LOG}} uki inspect {{uki}} {{ARGS}}
 
 # Use UKI_PATH from env/.env:
 #   echo 'UKI_PATH=../uki-out/vmlinuz-virt.efi' > .env
 #   just inspect-env
-inspect-env: build
-  {{BIN}} --log-level {{RUST_LOG}} inspect uki --file "${UKI_PATH:?Set UKI_PATH in env or .env}"
+uki-inspect-env: build
+  {{BIN}} --log-level {{RUST_LOG}} uki inspect "${UKI_PATH:?Set UKI_PATH in env or .env}"
 
 # --- CI aggregate -----------------------------------------------------------
 
@@ -88,5 +87,5 @@ smoke uki='':
 # quick, release-mode JSON inspect (good for timing locally)
 #   just fast ../uki-out/vmlinuz-virt.efi
 fast uki: build
-  {{BIN}} --log-level {{RUST_LOG}} inspect uki --file {{uki}} --json
+  {{BIN}} --log-level {{RUST_LOG}} uki inspect {{uki}} --format json
 
